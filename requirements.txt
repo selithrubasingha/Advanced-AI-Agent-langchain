@@ -1,0 +1,18 @@
+# For loading environment variables (API keys)
+python-dotenv
+
+# Core LangChain and LangGraph libraries
+langchain
+langgraph
+
+# To connect to OpenAI models like "gpt-4o"
+langchain-openai
+
+# For data validation and settings management
+pydantic
+
+# For making HTTP requests (used in snapshot_operations and web_operations)
+requests
+
+# Provides backports of new typing features, including TypedDict
+typing-extensions
