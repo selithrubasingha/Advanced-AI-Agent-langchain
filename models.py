@@ -1,0 +1,42 @@
+from typing_extensions import TypedDict
+from pydantic import BaseModel, Field
+from typing import Annotated, List , Optional
+from langgraph.graph.message import add_messages
+
+
+class State(TypedDict):
+    messages: Annotated[list, add_messages]
+    google_results: str | None
+    youtube_urls: List[str] | None
+    youtube_results: str | None
+    youtube_analysis: str | None
+    google_analysis: str | None
+    final_answer: str | None
+
+
+
+class OutputStructure(BaseModel):
+    course_name: str = Field(
+        description="The exact name of the course.",
+    )
+    website_name: str = Field(
+        ...,
+        description="The name of the website hosting the course (e.g., Coursera, Udemy,Youtube)."
+    )
+    free_course: Optional[bool] = Field(
+        None,  # This sets the default value to None
+        description="True if the course is free, False if paid, None if not specified."
+    )
+    course_time: Optional[str] = Field(
+        None,
+        description="The estimated time to complete the course (e.g., '10 hours', '3 weeks')."
+    )
+    course_topics: List[str] = Field(
+        ...,  # This is argument 1 (marks it as required)
+        description="A list of key topics or modules covered in the course."
+
+    )
+    description: str = Field(
+        ...,
+        description="A brief summary of the course content.",
+    )
