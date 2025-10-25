@@ -4,22 +4,21 @@ import requests
 from urllib.parse import quote_plus
 import json
 from dotenv import load_dotenv
-from snapshot_operations import poll_snapshot_status,download_snapshot
-
+from snapshot_operations import poll_snapshot_status, download_snapshot
 
 load_dotenv()
 
 
-def _make_api_request(url,**kwargs):
+def _make_api_request(url, **kwargs):
     api_key = os.getenv("BRIGHTDATA_API_KEY")
 
     headers = {
-        "Authorization":f"Bearer {api_key}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
 
     try:
-        response = requests.post(url , headers=headers, **kwargs)
+        response = requests.post(url, headers=headers, **kwargs)
 
         print(f"Status Code: {response.status_code}")
 
@@ -33,14 +32,10 @@ def _make_api_request(url,**kwargs):
         return None
 
 
-
-
-
-
 def serp_search(query):
     base_url = "https://www.google.com/search"
 
-    url =  "https://api.brightdata.com/request"
+    url = "https://api.brightdata.com/request"
 
     payload = {
         "zone": "ai_agent",
@@ -48,34 +43,31 @@ def serp_search(query):
         "format": "raw"
     }
 
-    full_response = _make_api_request(url,json=payload)
+    full_response = _make_api_request(url, json=payload)
 
     if not full_response:
         return None
 
-    extracted_data = {#full response is a LARGE json string but only need to
-        #get the relavent data strings
+    extracted_data = {  # full response is a LARGE json string but only need to
+        # get the relavent data strings
         "knowledge": full_response.get("knowledge", {}),
         "organic": full_response.get("organic", []),
     }
-    return extracted_data #gives a json output
+    return extracted_data  # gives a json output
 
 
 def _trigger_and_download_snapshot(snapshot_id):
-
-
-    #"snapshot_id" is built in in the json response I think
+    # "snapshot_id" is built in in the json response I think
 
     if not snapshot_id:
         return None
 
-    #if the status of the snapshot is not in the 200 s do this
+    # if the status of the snapshot is not in the 200 s do this
     if not poll_snapshot_status(snapshot_id):
         return None
 
-    #raw data is the snapshot!! but what is the snapshot??
+    # raw data is the snapshot!! but what is the snapshot??
     raw_data = download_snapshot(snapshot_id)
-
 
     return raw_data
 
@@ -117,36 +109,19 @@ def shorten_video_data(data_list):
     return shortened_list
 
 
-
-def reddit_search_api(keyword, num_of_posts=3):
-
-
-
+def youtube_search_api(keyword, num_of_posts=6):
     trigger_url = "https://api.brightdata.com/datasets/v3/scrape?dataset_id=gd_lk56epmy2i5g7lzu0k&notify=false&include_errors=true&type=discover_new&discover_by=keyword"
 
     data = json.dumps({
         "input": [
 
-            {"keyword": "java course", "num_of_posts": "4"}],
+            {"keyword": keyword, "num_of_posts": f"{num_of_posts}"}],
     })
 
-    response = _make_api_request(trigger_url,data=data)
+    response = _make_api_request(trigger_url, data=data)
 
-    data=_trigger_and_download_snapshot(response["snapshot_id"])
+    data = _trigger_and_download_snapshot(response["snapshot_id"])
 
-    llm_input_data=shorten_video_data(data)
+    llm_input_data = shorten_video_data(data)
 
-    print(llm_input_data)
-
-    return  llm_input_data
-
-
-
-
-
-
-
-
-
-
-
+    return llm_input_data
