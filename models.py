@@ -4,18 +4,6 @@ from typing import Annotated, List , Optional
 from langgraph.graph.message import add_messages
 
 
-class State(TypedDict):
-    messages: Annotated[list, add_messages]
-    user_question: str | None
-    google_results: str | None
-    youtube_urls: List[str] | None
-    youtube_results: str | None
-    youtube_analysis: str | None
-    google_analysis: str | None
-    final_answer: str | None
-
-
-
 class OutputStructure(BaseModel):
     course_name: str = Field(
         description="The exact name of the course.",
@@ -41,3 +29,27 @@ class OutputStructure(BaseModel):
         ...,
         description="A brief summary of the course content.",
     )
+
+
+class Analysis(BaseModel):
+    """
+    A model to hold the list of extracted courses from a data source
+    (like Google or YouTube).
+    """
+    courses: List[OutputStructure] = Field(
+        description="A list of all the courses found in the analysis."
+    )
+class State(TypedDict):
+    messages: Annotated[list, add_messages]
+    user_question: str | None
+    google_results: str | None
+    youtube_urls: List[str] | None
+    youtube_results: str | None
+    google_analysis: Optional[Analysis]  # This is now a Pydantic model holding a list
+    youtube_analysis: Optional[Analysis]
+    final_answer: str | None
+
+
+
+
+
