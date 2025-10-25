@@ -140,7 +140,7 @@ graph.add_edge("analyze_google_results", "analyze_youtube_results")
 graph.add_edge("analyze_youtube_results", "synthesize_analyses")
 graph.add_edge("synthesize_analyses", END)
 
-graph.compile()
+app = graph.compile()
 
 def run_chatbot():
     print("Multi-Source Research Agent")
@@ -164,9 +164,12 @@ def run_chatbot():
 
         print("\nStarting parallel research process...")
         print("Launching Google and YouTube searches...\n")
-        final_state = graph.invoke(state)
+        final_state = app.invoke(state)
 
         if final_state.get("final_answer"):
             print(f"\nFinal Answer:\n{final_state.get('final_answer')}\n")
 
         print("-" * 80)
+
+if __name__ == "__main__":
+    run_chatbot()
