@@ -44,7 +44,6 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
     user_question: str | None
     google_results: str | None
-    youtube_urls: List[str] | None
     youtube_results: str | None
     google_analysis: Optional[Analysis]  # This is now a Pydantic model holding a list
     youtube_analysis: Optional[Analysis]
