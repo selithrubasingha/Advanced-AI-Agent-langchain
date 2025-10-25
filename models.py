@@ -39,6 +39,7 @@ class Analysis(BaseModel):
     courses: List[OutputStructure] = Field(
         description="A list of all the courses found in the analysis."
     )
+
 class State(TypedDict):
     messages: Annotated[list, add_messages]
     user_question: str | None
@@ -50,6 +51,30 @@ class State(TypedDict):
     final_answer: str | None
 
 
+class RankedCourse(OutputStructure):
+    """
+    Extends the basic course structure to include rank and justification
+    for the final synthesis.
+    """
+    rank: int = Field(
+        ...,
+        description="The final rank of the course (1 is best, 6 is worst)."
+    )
+    justification: str = Field(
+        ...,
+        description="A  (5-6 sentence) justification for why this course "
+                    "was selected and ranked."
+    )
 
+class FinalSynthesis(BaseModel):
+    """
+    The final output model, containing a single ranked list of the
+    top 6 courses.
+    """
+    # This list will contain RankedCourse objects,
+    # each one having all the course data plus rank/justification.
+    ranked_courses: List[RankedCourse] = Field(
+        description="The final list of the 6 best courses, ranked 1-6."
+    )
 
 
