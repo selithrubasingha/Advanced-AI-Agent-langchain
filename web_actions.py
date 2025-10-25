@@ -6,6 +6,7 @@ import json
 from dotenv import load_dotenv
 from snapshot_operations import poll_snapshot_status,download_snapshot
 
+
 load_dotenv()
 
 
@@ -32,7 +33,7 @@ def _make_api_request(url,**kwargs):
         return None
 
 
-import json
+
 
 
 
@@ -142,7 +143,7 @@ def reddit_search_api(keyword, num_of_posts=3):
 
 
 
-reddit_search_api(" ")
+
 
 
 
