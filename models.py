@@ -6,6 +6,7 @@ from langgraph.graph.message import add_messages
 
 class State(TypedDict):
     messages: Annotated[list, add_messages]
+    user_question: str | None
     google_results: str | None
     youtube_urls: List[str] | None
     youtube_results: str | None
